@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nvision: загрузить данные{% endblock %}
+
+{% block body %}
+
+    <div class="panel panel-warning">
+        <div class="panel-heading"><h3 class="panel-title">Внимание!</h3></div>
+        <div class="panel-body">
+            <ol>
+                <li>Файл должен быть в кодировке UTF-8.</li>
+                <li>Индикатора загрузки нет.</li>
+                <li>Для тестирования можно использовать этот <code>_develop/input-data.utf8.cvs</code> файл.</li>
+                <li>Проверки на коррекность формата файла нет.</li>
+            </ol>
+        </div>
+    </div>
+
+    {% form_theme fileForm 'bootstrap_3_layout.html.twig' %}
+
+    {{ form_start(fileForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        {{ form_errors(fileForm) }}
+
+        {{ form_row(fileForm.file, {'label': 'Выберите CVS файл с информацией о сотрудниках и нажмите "Загрузить"'}) }}
+
+        <button type="submit" class="btn btn-primary">Загрузить</button>
+
+    {{ form_end(fileForm) }}
+
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nvision: главная{% endblock %}
+
+{% block body %}
+
+    <table id="nv-cities-table" class="table table-bordered">
+        <caption>Сотрудники по категориям и городам</caption>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Ремонт районных сетей</th>
+            <th>Клиентский сервис</th>
+            <th>Руководители клиентского сервиса</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if not cities %}
+            <tr>
+                <td colspan="3">Нет данных.</td>
+            </tr>
+        {% endif %}
+
+        {% for city in cities %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    <a href="#" data-category-id="0" data-city="{{ city[0] }}"
+                       class="city__link">{{ city[0] }}</a>
+                </td>
+                <td>
+                    <a href="#" data-category-id="1" data-city="{{ city[1] }}"
+                       class="city__link">{{ city[1] }}</a>
+                </td>
+                <td>
+                    <a href="#" data-category-id="2" data-city="{{ city[2] }}"
+                       class="city__link">{{ city[2] }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="nv-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 id="nv-modal-title" class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <table class="table table-bordered">
+                                <caption>Заходили 10.02.2017 или 11.02.2017</caption>
+                                <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Заходил</th>
+                                </tr>
+                                </thead>
+                                <tbody id="nv-left-employees">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6">
+                            <table class="table table-bordered">
+                                <caption>Зажодили в другое время</caption>
+                                <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Заходил</th>
+                                </tr>
+                                </thead>
+                                <tbody id="nv-right-employees">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script id="nv-tr-template" type="text/template">
+        <% _.each(employees, function (employee) { %>
+            <tr>
+                <td><%= employee.fullName %></td>
+                <td><%= employee.lastSeen %></td>
+            </tr>
+        <% }); %>
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function () {
+            var $trTemplate = $('#nv-tr-template');
+            var $modal = $('#nv-modal');
+            var $modalTitle = $('#nv-modal-title');
+            var $citiesTable = $('#nv-cities-table');
+            var $leftEmployees = $('#nv-left-employees');
+            var $rightEmployees = $('#nv-right-employees');
+            var $citiesTableTh = $citiesTable.find('th');
+            var template = _.template($trTemplate.html());
+            var employeeAPI = new nv.EmployeeAPI();
+
+            $citiesTable.on('click', '.city__link', function (event) {
+                var $link = $(event.target);
+                var city = $link.data('city');
+                var categoryId = +$link.data('categoryId');
+                var categoryName = $citiesTableTh[categoryId + 1].innerHTML;
+                var modalTitle = categoryName + ': г. ' + city;
+
+                $modalTitle.html(modalTitle);
+                $modal.modal();
+                employeeAPI.fetchEmployeesBy({ categoryId: categoryId, city: city })
+                    .done(renderResults)
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        alert('Произошла ошибка.\n\nОбратитесь в службу технической поддержки.\n\nтел. 555-555');
+                        console.log('# Nvision: ' + jqXHR.status + ' (' + errorThrown + ').');
+                    });
+            });
+
+            $modal.on('hidden.bs.modal', function (e) {
+                $leftEmployees.html('');
+                $rightEmployees.html('');
+            });
+
+            function renderResults(data) {
+                var leftEmployees = [];
+                var rightEmployees = [];
+                var date1 = '2017-02-10';
+                var date2 = '2017-02-11';
+
+                for (var i = 0; i < data.length; i++) {
+                    var employee = data[i];
+                    var lastSeen = employee.lastSeen;
+
+                    if (lastSeen == date1 || lastSeen == date2) {
+                        leftEmployees.push(employee);
+                    } else {
+                        rightEmployees.push(employee);
+                    }
+                }
+
+                $leftEmployees.html(template({employees: leftEmployees}));
+                $rightEmployees.html(template({employees: rightEmployees}));
+            }
+        });
+    </script>
+{% endblock %}
