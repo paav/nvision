@@ -9,9 +9,9 @@
         <div class="panel-body">
             <ol>
                 <li>Файл должен быть в кодировке UTF-8.</li>
-                <li>Индикатора загрузки нет.</li>
                 <li>Для тестирования можно использовать этот <code>_develop/input-data.utf8.cvs</code> файл.</li>
-                <li>Проверки на коррекность формата файла нет.</li>
+                <li>Тестовый файл загружается около 20 сек.</li>
+                <li>Проверки на корректность формата файла нет.</li>
             </ol>
         </div>
     </div>
@@ -24,8 +24,23 @@
 
         {{ form_row(fileForm.file, {'label': 'Выберите CVS файл с информацией о сотрудниках и нажмите "Загрузить"'}) }}
 
-        <button type="submit" class="btn btn-primary">Загрузить</button>
+        <button type="submit" id="nv-upload-btn" data-loading-text="Данные загружаются..." class="btn btn-primary"
+                autocomplete="off">
+            Загрузить
+        </button>
 
     {{ form_end(fileForm) }}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function () {
+            $('#nv-upload-btn').on('click', function () {
+                $(this).button('loading');
+            });
+        });
+    </script>
+{%  endblock %}
