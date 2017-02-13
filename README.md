@@ -15,8 +15,8 @@ It has an *"ISO-8859 text, with CRLF line terminators"* type.
 
 1. `git clone https://github.com/paav/nvision.git`
 2. `cd nvision`
-3. `composer install`
-4. Create database.
+3. Create database.
+4. `composer install`
 6. Configure database connection in an `app/config/parameters.yml` file.
 7. Create database tables with a `php bin/console doctrine:schema:update --force` command.
 8. Add new virtual host (for the Apache web server).
@@ -30,12 +30,7 @@ It has an *"ISO-8859 text, with CRLF line terminators"* type.
         CustomLog "/Users/alexey/log/nvision-access_log" common
     </VirtualHost>
     ```
-9. Add the following line to the `/etc/hosts` file (path is valid for Linux and MacOS).
-
-    ```
-    127.0.0.1	nvision.dev
-    ```
-10. Open `http://nvision.dev` in your favorite browser.
+9. Open `http://nvision.dev` in your favorite browser.
 
 
 # Input Data Uploading
@@ -45,7 +40,7 @@ It has an *"ISO-8859 text, with CRLF line terminators"* type.
 1. Make all steps from the [Installation](#installation) section.
 2. Run the following command:
 ```shell
-mysql -u[your_db_user] -p[your_db_password] [db_name] <_develop/dump_data-only.sql
+mysql -u[your_db_user] -p [db_name] <_develop/dump_data-only.sql
 ```
 
 ## Method Two
@@ -56,5 +51,5 @@ mysql -u[your_db_user] -p[your_db_password] [db_name] <_develop/dump_data-only.s
 
 # Miscellanea
 
-A Full database dump (tables and data) is [here](_develop/dump_full.sql).
+A full database dump (tables and data) is [here](_develop/dump_full.sql).
 

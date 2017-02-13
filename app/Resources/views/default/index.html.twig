@@ -17,7 +17,9 @@
         <tbody>
         {% if not cities %}
             <tr>
-                <td colspan="3">Нет данных.</td>
+                <td colspan="4" class="text-center">
+                    <a href="{{ path('uploads') }}">Загрузить данные</a>
+                </td>
             </tr>
         {% endif %}
 
