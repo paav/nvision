@@ -19,7 +19,7 @@ It has an *"ISO-8859 text, with CRLF line terminators"* type.
 4. Create database.
 6. Configure database connection in an `app/config/parameters.yml` file.
 7. Create database tables with a `php bin/console doctrine:schema:update --force` command.
-8. Create virtual host (for the Apache web server).
+8. Add new virtual host (for the Apache web server).
 
     Example:
     ```apache
@@ -30,8 +30,12 @@ It has an *"ISO-8859 text, with CRLF line terminators"* type.
         CustomLog "/Users/alexey/log/nvision-access_log" common
     </VirtualHost>
     ```
+9. Add the following line to the `/etc/hosts` file (path is valid for Linux and MacOS).
 
-9. Open `http://nvision.dev` in your favorite browser.
+    ```
+    127.0.0.1	nvision.dev
+    ```
+10. Open `http://nvision.dev` in your favorite browser.
 
 
 # Input Data Uploading
